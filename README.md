@@ -43,7 +43,7 @@ pip install rdflib pandas numpy scikit-learn networkx python-louvain matplotlib
 
 ---
 
-## ⚙Usage
+## Usage
 
 All scripts assume you have an RDF Turtle file containing patient data, e.g. `patients.ttl`.
 
