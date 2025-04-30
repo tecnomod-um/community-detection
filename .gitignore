@@ -1,0 +1,5 @@
+.venv/*
+__pycache__/*
+*.ipynb
+comunity_detection_test.py
+*.ttl
