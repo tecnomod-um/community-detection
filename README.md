@@ -4,7 +4,7 @@ This repository provides a modular pipeline for detecting and analyzing patient 
 
 ---
 
-## 🔧 Requirements
+## Requirements
 
 - **Python 3.8+**
 - rdflib
