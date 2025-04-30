@@ -1,7 +1,7 @@
 ### 1. Community Detection
 
 ```
-community_detection_test.py
+python community_detection_main.py RDF_guttman.ttl --threshold 0.5 --method louvain
 ```
 
 ### 2. Community member visualization
