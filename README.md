@@ -30,13 +30,7 @@ pip install rdflib pandas numpy scikit-learn networkx python-louvain matplotlib
    git clone https://github.com/your_org/patient-community-detection.git
    cd patient-community-detection
    ```
-2. (Optional) Create and activate a virtual environment:
-   ```
-   python -m venv .venv
-   source .venv/bin/activate   # Linux/macOS
-   .venv\Scripts\activate    # Windows
-   ```
-3. Install dependencies:
+2. Install dependencies:
    ```
    pip install rdflib pandas numpy scikit-learn networkx python-louvain matplotlib
    ```
