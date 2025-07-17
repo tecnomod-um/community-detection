@@ -6,6 +6,7 @@ import argparse
 from clustering.community_visualization import visualize_communities
 import random
 import numpy as np
+import community as community_louvain
 
 
 def community_detection_main(ttl_path: str,
@@ -82,8 +83,6 @@ if __name__ == '__main__':
     )
 
     visualize_communities(G, partition, "visualization_output/communitiesGuttman", False)
-
-    import community as community_louvain
 
     modularity_score = calculate_community_modularity(partition, G, weight='weight')
     print(f"Modularity score: {modularity_score:.4f}")
