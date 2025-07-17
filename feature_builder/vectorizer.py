@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from .config import NAMESPACES
 from sklearn.preprocessing import StandardScaler
+from rdflib import URIRef
 
 # Cargar namespaces dinámicamente desde config
 NS1 = rdflib.Namespace(NAMESPACES['ns1'])
@@ -40,8 +41,9 @@ def _load_rdf_graph(ttl_path):
     return graph
 
 
-def _extract_patient_nodes(graph):
+def _extract_patient_nodes_namespace(graph):
     """
+    NOT CURRENTLY USED.
     Extrae todos los nodos de tipo ClinicalCase (ns3:ClinicalCase).
     """
     patient_nodes = set()
@@ -49,6 +51,22 @@ def _extract_patient_nodes(graph):
         patient_nodes.add(s)
     return list(patient_nodes)
 
+
+def _extract_patient_nodes(graph):
+    """
+    Extrae todos los nodos que son instancias de "ClinicalCase",
+    sin depender de namespaces.
+    Busca triples (?s rdf:type ?o) donde el nombre local de ?o sea "ClinicalCase".
+    Retorna una lista de sujetos.
+    """
+    patient_nodes = set()
+    for subj, _, obj in graph.triples((None, rdflib.RDF.type, None)):
+        if isinstance(obj, URIRef):
+            # Obtener el fragmento tras '#' o '/', para comparar el nombre local
+            local_name = obj.split('#')[-1].split('/')[-1]
+            if local_name == 'ClinicalCase':
+                patient_nodes.add(subj)
+    return list(patient_nodes)
 
 def _extract_patient_features(graph, patient_nodes):
     """

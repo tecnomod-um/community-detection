@@ -30,7 +30,7 @@ def build_similarity_graph(feature_vectors: np.ndarray,
     for i in range(n):
         for j in range(i + 1, n):
             weight = sim_matrix[i, j]
-            if threshold is None or weight >= threshold:
+            if weight > 0 and (threshold is None or weight >= threshold):
                 G.add_edge(patient_ids[i], patient_ids[j], weight=weight)
 
     return G

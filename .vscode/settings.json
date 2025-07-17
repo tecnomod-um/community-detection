@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./consensus/fastconsensus/src",
+        "./fastconsensus/src"
+    ]
+}

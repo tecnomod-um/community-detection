@@ -1,12 +1,19 @@
 # community/community_detector.py
 import networkx as nx
+import igraph as ig
+try:
+    import leidenalg
+except ImportError:
+    leidenalg = None
 try:
     import community as community_louvain  # python-louvain package
 except ImportError:
     community_louvain = None
 
+from igraph_converter import convert_networkx_to_igraph_via_graphml
 
-def detect_communities(G: nx.Graph, method: str = 'louvain', seed = None) -> dict:
+
+def detect_communities(G: nx.Graph, method: str = 'louvain', seed = None, weight="weight") -> dict:
     """
     Detecta comunidades en el grafo de similitud de pacientes.
 
@@ -25,6 +32,23 @@ def detect_communities(G: nx.Graph, method: str = 'louvain', seed = None) -> dic
         for idx, comm in enumerate(communities):
             for node in comm:
                 partition[node] = idx
+
+    elif method == 'leiden':
+        # Convert NetworkX graph to igraph via GraphML round-trip
+        ig_graph = convert_networkx_to_igraph_via_graphml(G)
+
+        # Run Leiden algorithm on the igraph graph
+        partition_obj = leidenalg.find_partition(
+            ig_graph,
+            leidenalg.ModularityVertexPartition,
+            weights=weight,
+            seed=seed
+        )
+
+        # Map igraph vertex names back to community IDs
+        membership = partition_obj.membership
+        node_names = ig_graph.vs['name']
+        return { node_names[i]: membership[i] for i in range(len(node_names)) }
 
     else:
         raise ValueError(f"Método desconocido: {method}. Use 'louvain' o 'label_propagation'.")

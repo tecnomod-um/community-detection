@@ -66,7 +66,6 @@ if __name__ == '__main__':
     random.seed(SEED)
     np.random.seed(SEED)
 
-
     parser = argparse.ArgumentParser(description='Pipeline de Community Detection para pacientes RDF')
     parser.add_argument('ttl_path', help='Ruta al archivo .ttl con el grafo RDF')
     parser.add_argument('--threshold', type=float, default=None,
