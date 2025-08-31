@@ -17,7 +17,7 @@ def _is_has_value(predicate):
     return pred_str.endswith("hasValue") or pred_str.split("/")[-1] == "hasValue" or pred_str.split("#")[-1] == "hasValue"
 
 
-def build_feature_vectors(ttl_path, sort=True):
+def build_feature_vectors(ttl_path):
     """
     Construye los vectores de características de los pacientes a partir del archivo RDF.
 
@@ -29,8 +29,8 @@ def build_feature_vectors(ttl_path, sort=True):
     patient_features = _extract_patient_features(graph, patient_nodes)
     feature_vectors, patient_ids = _vectorize_features(patient_features)
 
-    if sort:
-        patient_ids = sorted(patient_ids)
+    # if sort:
+    #    patient_ids = sorted(patient_ids)
         
     return feature_vectors, patient_ids
 
