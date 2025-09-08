@@ -7,6 +7,8 @@ from clustering.community_visualization import visualize_communities
 import random
 import numpy as np
 import community as community_louvain
+import os
+import csv
 
 
 def community_detection_main(ttl_path: str,
@@ -106,4 +108,21 @@ if __name__ == '__main__':
             f.write("\n")
 
     print(f"Communities successfully saved to: {output_txt}")
+
+    output_dir = "outputs"
+    os.makedirs(output_dir, exist_ok=True)
+    today_str = datetime.today().strftime("%Y%m%d")
+    output_file = os.path.join(
+        output_dir,
+        f"{today_str}_CommunityDetection.csv"
+    )
+
+    with open(output_file, mode="w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Cluster", "PatientID"])
+        for comm_id, members in communities.items():
+            for pid in members:
+                writer.writerow([comm_id, pid])
+
+    print(f"CSV file saved to {output_file}")
 

@@ -5,8 +5,10 @@ import argparse
 import sys
 import rdflib
 
-from clustering.ward_clustering import run_ward
-from clustering.spectral_clustering import run_spectral
+from clustering.clustering import clustering_apply
+import csv
+import os
+from datetime import datetime
 
 def load_rdf_graph(ttl_path: str) -> rdflib.Graph:
     """Carga un grafo RDF desde un fichero .ttl."""
@@ -16,14 +18,20 @@ def load_rdf_graph(ttl_path: str) -> rdflib.Graph:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Mini-driver para elegir enfoque de clustering (WARD / SPECTRAL) sobre un RDF TTL."
+        description="Mini-driver para elegir enfoque de clustering sobre un RDF TTL."
     )
     parser.add_argument("ttl_path", help="Ruta al fichero .ttl con el grafo RDF")
     parser.add_argument(
         "-m", "--method",
-        choices=["ward", "spectral"],
+        choices=["kmeans"],
         required=True,
         help="Método a ejecutar"
+    )
+    parser.add_argument(
+        "-n", "--nclusters",
+        type=int,
+        default=5,
+        help="(Optional) Number of clusters (default=5)"
     )
     args = parser.parse_args()
 
@@ -33,13 +41,30 @@ def main():
         print(f"[ERROR] No se pudo cargar el TTL ({args.ttl_path}): {e}", file=sys.stderr)
         sys.exit(1)
 
-    if args.method == "ward":
-        run_ward(graph)
-    elif args.method == "spectral":
-        run_spectral(graph)
-    else:
-        print("[ERROR] Método no soportado.", file=sys.stderr)
-        sys.exit(2)
+    clusters = clustering_apply(graph, args.method, args.nclusters)
+
+    for cluster in clusters:
+        print(f"Cluster {cluster}:")
+        for patient in clusters[cluster]:
+            print(f"  - {patient}")
+        print()
+
+    output_dir = "outputs"
+    os.makedirs(output_dir, exist_ok=True)
+    today_str = datetime.today().strftime("%Y%m%d")
+    output_file = os.path.join(
+        output_dir,
+        f"{today_str}_{args.method}_{args.nclusters}.csv"
+    )
+
+    with open(output_file, mode="w", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Cluster", "PatientID"])
+        for cluster in clusters:
+            for patient in clusters[cluster]:
+                writer.writerow([cluster, patient])
+    print(f"CSV file saved to {output_file}")
+
 
 if __name__ == "__main__":
     main()
