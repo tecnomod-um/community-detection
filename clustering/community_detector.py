@@ -24,7 +24,7 @@ def detect_communities(G: nx.Graph, method: str = 'louvain', seed = None, weight
     if method == 'louvain':
         if community_louvain is None:
             raise ImportError("El paquete 'community' (python-louvain) no está instalado.")
-        partition = community_louvain.best_partition(G, weight='weight', random_state=seed)
+        partition = community_louvain.best_partition(G, weight='weight', random_state=seed, resolution=1)
 
     elif method == 'label_propagation':
         communities = nx.algorithms.community.asyn_lpa_communities(G, weight='weight')

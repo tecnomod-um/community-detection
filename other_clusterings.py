@@ -45,9 +45,9 @@ def main():
 
     for cluster in clusters:
         print(f"Cluster {cluster}:")
-        for patient in clusters[cluster]:
-            print(f"  - {patient}")
-        print()
+        #for patient in clusters[cluster]:
+        #    print(f"  - {patient}")
+        #print()
 
     output_dir = "outputs"
     os.makedirs(output_dir, exist_ok=True)
